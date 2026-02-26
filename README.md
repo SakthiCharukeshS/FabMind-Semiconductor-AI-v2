@@ -7,7 +7,7 @@ End-to-End Multimodal AI Framework for Semiconductor Yield Prediction &amp; Faul
 ![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-ff4b4b)
 ![Status](https://img.shields.io/badge/Status-SOTA%20Achieved-brightgreen)
 
-**FabMind** is a state-of-the-art (SOTA) **Multimodal Sensor Fusion Framework** designed for the semiconductor industry. It integrates **IoT Telemetry (Time-Series)** and **Wafer Metrology (Computer Vision)** to predict manufacturing yields with **97.7% accuracy**, significantly outperforming traditional unimodal inspection systems.
+**FabMind** is a state-of-the-art (SOTA) **Multimodal Sensor Fusion Framework** designed for the semiconductor industry. It integrates **IoT Telemetry (Time-Series)** and **Wafer Metrology (Computer Vision)** to predict manufacturing yields with **95.54% accuracy**, significantly outperforming traditional unimodal inspection systems.
 
 ---
 
@@ -77,7 +77,7 @@ We compared **FabMind** against single-source baselines. The fusion approach yie
 | :--- | :--- | :--- | :--- | :--- |
 | **Sensors Only** (Autoencoder) | 90.76% | 0.88 | 0.85 | 0.62 |
 | **Images Only** (CNN) | 99.04% | 0.98 | 0.99 | 0.95 |
-| **FabMind Fusion** (Proposed) | **97.77%** | **0.995** | **1.00** | **0.71** |
+| **FabMind Fusion** (Proposed) | **95.54%** | **0.995** | **1.00** | **0.71** |
 
 > *Note: While "Images Only" has higher raw accuracy on the clean WM-811K dataset, the **Fusion Model** is preferred for real-world deployment as it correlates internal machine faults (Sensors) with visual outcomes, providing a safety net against camera failure.*
 

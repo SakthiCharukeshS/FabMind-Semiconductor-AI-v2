@@ -3,90 +3,102 @@ import os
 
 TABLES_DIR = "tables"
 
-def generate_latex_code(df, caption, label, columns=None):
-    if columns:
-        df = df[columns]
+def generate_latex(filename, caption, label):
+    path = f"{TABLES_DIR}/{filename}"
+    if not os.path.exists(path): 
+        print(f"% ⚠️ WARNING: {filename} not found. Skipping.")
+        return ""
     
-    # Start Table
+    df = pd.read_csv(path, index_col=0)
+    
+    # Start Table Environment
     latex = "\\begin{table}[h!]\n\\centering\n"
     latex += f"\\caption{{{caption}}}\n\\label{{{label}}}\n"
     latex += "\\resizebox{\\textwidth}{!}{\n"
     
-    # Column Setup
+    # Column Setup (Left align first col, Center align rest)
     cols = "l" + "c" * len(df.columns)
     latex += "\\begin{tabular}{" + cols + "}\n\\hline\n"
     
-    # Header
+    # Header Row
+    # Escape special characters like % if needed, usually bolding headers is enough
     header = " & ".join([f"\\textbf{{{c}}}" for c in df.columns])
-    latex += f"\\textbf{{Metric}} & {header} \\\\ \\hline\n"
+    latex += f"\\textbf{{Metric/Model}} & {header} \\\\ \\hline\n"
     
-    # Rows
+    # Data Rows
     for index, row in df.iterrows():
         values = []
         for x in row:
             if isinstance(x, (int, float)):
-                values.append(f"{x:.4f}")
+                # If it's an integer (like Support), print as int, else float
+                if float(x).is_integer():
+                    values.append(f"{int(x)}")
+                else:
+                    values.append(f"{x:.4f}")
             else:
-                values.append(str(x))
+                # It's a string (like Method names in Table 6)
+                # Escape common latex issues if necessary
+                clean_str = str(x).replace("%", "\\%")
+                values.append(clean_str)
+        
         row_str = " & ".join(values)
         latex += f"\\textbf{{{index}}} & {row_str} \\\\ \n"
         
     latex += "\\hline\n\\end{tabular}\n}\n\\end{table}\n"
     return latex
 
-def create_extra_tables():
-    # 1. Dataset Statistics Table (New)
-    data_stats = {
-        "Train Samples": [1253, 142360],
-        "Test Samples": [314, 35590],
-        "Features": [591, "64x64x1"],
-        "Imbalance Ratio": ["1:14", "1:14"]
-    }
-    df_stats = pd.DataFrame(data_stats, index=["SECOM (Sensors)", "WM-811K (Vision)"])
-    
-    # 2. Confusion Matrix Metrics (Derived from T1 CSV if available, else simulated from 95% acc)
-    # We calculate rates: TPR (Recall), TNR (Specificity), PPV (Precision), NPV
-    # Based on your Final Result: Recall 0.71, Precision 0.65
-    data_cm = {
-        "True Positive Rate (Sensitivity)": [0.7143],
-        "True Negative Rate (Specificity)": [0.9720],
-        "Pos. Predictive Value (Precision)": [0.6522],
-        "Neg. Predictive Value": [0.9800],
-        "False Positive Rate": [0.0280],
-        "False Negative Rate": [0.2857]
-    }
-    df_cm = pd.DataFrame(data_cm, index=["FabMind Performance"])
-
-    return df_stats, df_cm
-
 if __name__ == "__main__":
-    print("% --- COPY EVERYTHING BELOW THIS LINE TO YOUR LATEX FILE ---\n")
+    print("% ========================================================")
+    print("% COPY ALL THE CODE BELOW INTO YOUR LATEX EDITOR")
+    print("% ========================================================\n")
     
-    # Load Existing CSVs
-    try:
-        t1 = pd.read_csv(f"{TABLES_DIR}/Table_1_Benchmark_Comparison.csv", index_col=0)
-        t2 = pd.read_csv(f"{TABLES_DIR}/Table_2_Ablation_Study.csv", index_col=0)
-        t3 = pd.read_csv(f"{TABLES_DIR}/Table_3_ClassWise.csv", index_col=0)
-        t4 = pd.read_csv(f"{TABLES_DIR}/Table_4_Efficiency.csv", index_col=0)
-        t5 = pd.read_csv(f"{TABLES_DIR}/Table_5_Imbalance.csv", index_col=0)
-        
-        # Generate New Ones
-        t6, t7 = create_extra_tables()
-        
-        # Print Latex
-        print(generate_latex_code(t6, "Dataset Specifications and Split", "tab:datasets"))
-        print("\n")
-        print(generate_latex_code(t1, "Benchmark Comparison of Classifiers", "tab:benchmark"))
-        print("\n")
-        print(generate_latex_code(t2, "Ablation Study: Impact of Modality Fusion", "tab:ablation"))
-        print("\n")
-        print(generate_latex_code(t7, "Detailed Confusion Matrix Metrics", "tab:conf_matrix_stats"))
-        print("\n")
-        print(generate_latex_code(t3, "Class-wise Defect Detection Performance", "tab:classwise"))
-        print("\n")
-        print(generate_latex_code(t4, "Computational Efficiency Analysis", "tab:efficiency"))
-        print("\n")
-        print(generate_latex_code(t5, "Impact of Imbalance Handling Strategies", "tab:imbalance"))
-        
-    except FileNotFoundError:
-        print("❌ Error: Run generate_all_results.py first to create the CSVs!")
+    # 1. Benchmark Table
+    print(generate_latex(
+        "Table_1_Benchmark_Comparison.csv", 
+        "Quantitative Comparison of Classification Models (Sorted by Accuracy)", 
+        "tab:benchmark"
+    ))
+    print("\n% --------------------------------------------------------\n")
+
+    # 2. Ablation Study
+    print(generate_latex(
+        "Table_2_Ablation_Study.csv", 
+        "Ablation Study: Impact of Modalities on Performance and Latency", 
+        "tab:ablation"
+    ))
+    print("\n% --------------------------------------------------------\n")
+
+    # 3. Class-Wise Performance (The New One)
+    print(generate_latex(
+        "Table_3_ClassWise.csv", 
+        "Detailed Class-wise Detection Rate (Recall) and Support", 
+        "tab:classwise"
+    ))
+    print("\n% --------------------------------------------------------\n")
+
+    # 4. Computational Efficiency
+    print(generate_latex(
+        "Table_4_Efficiency.csv", 
+        "Computational Efficiency and Suitability for Edge Deployment", 
+        "tab:efficiency"
+    ))
+    print("\n% --------------------------------------------------------\n")
+
+    # 5. Imbalance Handling
+    print(generate_latex(
+        "Table_5_Imbalance.csv", 
+        "Impact of Imbalance Handling Strategies on False Positives", 
+        "tab:imbalance"
+    ))
+    print("\n% --------------------------------------------------------\n")
+
+    # 6. SOTA Comparison (The Literature Review One)
+    print(generate_latex(
+        "Table_6_SOTA_Comparison.csv", 
+        "Benchmarking FabMind against Recent State-of-the-Art Studies (2020-2025)", 
+        "tab:sota"
+    ))
+    
+    print("\n% ========================================================")
+    print("% END OF TABLES")
+    print("% ========================================================")

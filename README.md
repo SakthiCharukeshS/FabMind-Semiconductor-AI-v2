@@ -11,7 +11,7 @@ End-to-End Multimodal AI Framework for Semiconductor Yield Prediction &amp; Faul
 
 ---
 
-## 📖 Table of Contents
+##  Table of Contents
 1. [Project Overview](#-project-overview)
 2. [The Architecture (6-Phase Pipeline)](#-the-architecture)
 3. [Deep Dive: The AI Models](#-deep-dive-the-ai-models)
@@ -21,7 +21,7 @@ End-to-End Multimodal AI Framework for Semiconductor Yield Prediction &amp; Faul
 
 ---
 
-## 🔭 Project Overview
+##  Project Overview
 Semiconductor manufacturing is one of the most complex processes in the world. A single "Wafer" takes months to fabricate.
 *   **The Problem:** Existing Fault Detection (FDC) systems are "siloed." They either look at machine sensors (numbers) OR inspection images (pictures). They rarely talk to each other.
 *   **The FabMind Solution:** We propose a **Late Fusion Architecture** that combines the "Health of the Machine" (Sensor Data) with the "Quality of the Product" (Wafer Map) to make a holistic Yield Prediction.
@@ -34,7 +34,7 @@ Semiconductor manufacturing is one of the most complex processes in the world. A
 
 ---
 
-## 🏗️ The Architecture
+##  The Architecture
 The project follows a rigorous **6-Phase Industrial Pipeline**:
 
 | Phase | Module Name | Technology Used | Function |
@@ -48,7 +48,7 @@ The project follows a rigorous **6-Phase Industrial Pipeline**:
 
 ---
 
-## 🧠 Deep Dive: The AI Models
+## Deep Dive: The AI Models
 
 ### **1. The Sensor Brain (Autoencoder)**
 *   **Input:** 591 Process Sensors (Pressure, Temp, Gas Flow).
@@ -69,7 +69,7 @@ The project follows a rigorous **6-Phase Industrial Pipeline**:
 
 ---
 
-## 📊 Performance Results & Benchmarks
+## Performance Results & Benchmarks
 
 We compared **FabMind** against single-source baselines. The fusion approach yields the highest accuracy and robustness.
 
@@ -85,7 +85,7 @@ We compared **FabMind** against single-source baselines. The fusion approach yie
 
 ---
 
-## 📉 Visualizations & XAI
+##  Visualizations & XAI
 
 ### **1. Latent Space Clustering (t-SNE)**
 We visualized the "Brain" of the AI. The plot below shows how the model mathematically separates **Good Wafers (Blue)** from **Defective Wafers (Red)**. The distinct "islands" of red dots prove the model has learned specific defect signatures.
@@ -104,7 +104,7 @@ Using **SHAP**, we identify exactly *why* a wafer failed.
 
 ---
 
-## 💻 Installation & Usage
+## Installation & Usage
 
 ### **Prerequisites**
 *   Python 3.8+
